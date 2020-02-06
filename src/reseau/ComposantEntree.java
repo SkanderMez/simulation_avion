@@ -11,13 +11,13 @@ public class ComposantEntree extends Composant {
         this.quantiteOrCapacity = quantiteOrCapacity;
     }
 
-    public ComposantEntree(Point vitesse, Icone icone, int quantiteOrCapacity) {
-        super(vitesse, icone);
+    public ComposantEntree(Point vitesse, Icone icone, String type, int quantiteOrCapacity) {
+        super(vitesse, icone, type);
         this.quantiteOrCapacity = quantiteOrCapacity;
     }
 
-    public ComposantEntree(Point position, Point vitesse, Icone icone, int quantiteOrCapacity) {
-        super(position, vitesse, icone);
+    public ComposantEntree(Point position, Point vitesse, Icone icone, String type, int quantiteOrCapacity) {
+        super(position, vitesse, icone, type);
         this.quantiteOrCapacity = quantiteOrCapacity;
     }
 
@@ -36,7 +36,11 @@ public class ComposantEntree extends Composant {
     @Override
     public String toString() {
         return "ComposantEntree{" +
-                "quantiteOrCapacity=" + quantiteOrCapacity +
+                ", type='" + type  +
+                ", quantiteOrCapacity=" + quantiteOrCapacity +
+                ", vitesse=" + vitesse +
+                ", icone=" + icone +
+                ", position=" + position +
                 '}';
     }
 }

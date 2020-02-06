@@ -8,13 +8,13 @@ public class UsineAvecEntree extends UsineProduction {
 
     protected List<ComposantEntree> composantsEntree;
 
-    public UsineAvecEntree(int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, List<ComposantEntree> composantsEntree) {
-        super(id, iconesUsine, composantSortie, intervalProduction);
+    public UsineAvecEntree(int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, String type, List<ComposantEntree> composantsEntree) {
+        super(id, iconesUsine, composantSortie, intervalProduction, type);
         this.composantsEntree = composantsEntree;
     }
 
-    public UsineAvecEntree(Point position, int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, List<ComposantEntree> composantsEntree) {
-        super(position, id, iconesUsine, composantSortie, intervalProduction);
+    public UsineAvecEntree(Point position, int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, String type, List<ComposantEntree> composantsEntree) {
+        super(position, id, iconesUsine, composantSortie, intervalProduction, type);
         this.composantsEntree = composantsEntree;
     }
 
@@ -29,7 +29,8 @@ public class UsineAvecEntree extends UsineProduction {
     @Override
     public String toString() {
         return "UsineAvecEntree{" +
-                "composantsEntree=" + composantsEntree +
+                "Type= "+type+
+                " composantsEntree=" + composantsEntree +
                 ", id=" + id +
                 ", iconesUsine=" + iconesUsine +
                 ", position=" + position +

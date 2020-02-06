@@ -14,12 +14,13 @@ import java.util.List;
 
 public class MetadonneeConfig extends Configuration {
 
-    public NodeList recupererUsines() throws IOException, SAXException, ParserConfigurationException {
+    //A mettre dans la classe Configuration (utilisé aussi dans simulation)
+    public  NodeList recupererUsines(String balise,String node) throws IOException, SAXException, ParserConfigurationException {
 
         Document doc = readXmlFile();
 
         //lire la balise metadonnees
-        Node metadonnees = doc.getElementsByTagName("metadonnees").item(0);
+        Node metadonnees = doc.getElementsByTagName(balise).item(0);
 
         //verifier que la balise metadonnes a des fils ( qui seront les usines)
         if (metadonnees.getNodeType() == Node.ELEMENT_NODE) {
@@ -28,7 +29,7 @@ public class MetadonneeConfig extends Configuration {
             Element eElement = (Element) metadonnees;
 
             //Lire les usines
-            NodeList usineList = getSpecificNodeListFromElement(eElement, "usine");
+            NodeList usineList = getSpecificNodeListFromElement(eElement, node);
 
             return usineList;
         }
@@ -78,9 +79,10 @@ public class MetadonneeConfig extends Configuration {
                 for (int compteurEntrees = 0; compteurEntrees < entreeList.getLength(); compteurEntrees++) {
                     Node entree = entreeList.item(compteurEntrees);
                     if (usine.getAttributes().getNamedItem("type").getNodeValue().equals("entrepot")) {
-                            composantsEntreeObjectsList.add(new ComposantEntree(null, null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), Integer.parseInt(entree.getAttributes().getNamedItem("capacite").getNodeValue())));
+                            composantsEntreeObjectsList.add(new ComposantEntree(null,null,new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"),entree.getAttributes().getNamedItem("type").getNodeValue(),Integer.parseInt(entree.getAttributes().getNamedItem("capacite").getNodeValue())));
                     } else {
-                        composantsEntreeObjectsList.add(new ComposantEntree(null,null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), Integer.parseInt(entree.getAttributes().getNamedItem("quantite").getNodeValue())));
+                        ComposantEntree c = new ComposantEntree(null,null,new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"),entree.getAttributes().getNamedItem("type").getNodeValue(),Integer.parseInt(entree.getAttributes().getNamedItem("quantite").getNodeValue()));
+                        composantsEntreeObjectsList.add(c);
                     }
                 }
             }
@@ -99,7 +101,7 @@ public class MetadonneeConfig extends Configuration {
             if (nodeExistsInElement(usineElement, "sortie")) {
                 //Lire la sortie ( une seule sortie par usine )
                 Node sortie = getSpecificNodeListFromElement(usineElement, "sortie").item(0);
-                    composantSortieObject = new Composant(null,null ,new Icone("src/ressources/" + sortie.getAttributes().getNamedItem("type").getNodeValue() + ".png"));
+                    composantSortieObject = new Composant(null,null ,new Icone("src/ressources/" + sortie.getAttributes().getNamedItem("type").getNodeValue() + ".png"),sortie.getAttributes().getNamedItem("type").getNodeValue());
             }
         }
 
@@ -129,7 +131,7 @@ public class MetadonneeConfig extends Configuration {
 
         List<Usine> usineObjectsList = new ArrayList<>();
 
-        NodeList usineList = recupererUsines();
+        NodeList usineList = recupererUsines("metadonnees","usine");
         for (int compteurUsines = 0; compteurUsines < usineList.getLength(); compteurUsines++) {
             Node usine = usineList.item(compteurUsines);
             Element usineElement = (Element) usine;
@@ -140,12 +142,12 @@ public class MetadonneeConfig extends Configuration {
 
             //Usine avec entre sortie
             if (nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")) {
-                    usineObjectsList.add(new UsineAvecEntree(null,0,iconesUsineList,composantSortie,intervalProductionValue,composantEntreeList));
+                    usineObjectsList.add(new UsineAvecEntree(null,0,iconesUsineList,composantSortie,intervalProductionValue,usineElement.getAttribute("type"),composantEntreeList));
             }
             //Usine avec sortie sans entree
             else if(!nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")){
 
-                usineObjectsList.add(new UsineProduction(null,0,iconesUsineList,composantSortie, intervalProductionValue));
+                usineObjectsList.add(new UsineProduction(null,0,iconesUsineList,composantSortie, intervalProductionValue,usineElement.getAttribute("type")));
 
             }
             // Entrepot

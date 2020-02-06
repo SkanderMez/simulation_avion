@@ -1,4 +1,6 @@
-package reseau;
+package simulation;
+
+import reseau.Usine;
 
 public class Chemin {
 
