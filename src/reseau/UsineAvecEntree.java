@@ -1,47 +1,54 @@
 package reseau;
 
 
+import simulation.Composant;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsineAvecEntree extends UsineProduction {
 
-    protected List<List<ComposantEntree>> composantsEntreeList;
+    protected List<TypeComposant> typeComposantList = new ArrayList<>();
 
+    protected List<ComposantUsine> composantUsineList = new ArrayList<>();
 
-    public boolean veriferValiditeStock(){
-
-        boolean isValid = true;
-
-        for(List<ComposantEntree> composantEntree: composantsEntreeList){
-            for (ComposantEntree composant : composantEntree){
-                if(composant.getQuantiteOrCapacity() < composantEntree.size()){
-                    isValid = false;
-                    return isValid;
-                }
-            }
+    public int getQuantiteByTypeComposant(TypeComposant typeComposant){
+        for(ComposantUsine composantUsine : composantUsineList){
+            if(composantUsine.getComposant().getType()==typeComposant.getType()) return composantUsine.getQuantité();
         }
-
-        return isValid;
+         return 0;
     }
 
-    public UsineAvecEntree(List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, String type, List<List<ComposantEntree>> composantsEntreeList) {
-        super(iconesUsine, composantSortie, intervalProduction, type);
-        this.composantsEntreeList = composantsEntreeList;
+    public UsineAvecEntree(List<IconeUsine> iconesUsine, TypeComposant typeComposantSortie, int intervalProduction, String type, List<TypeComposant> typeComposantList) {
+        super(iconesUsine, typeComposantSortie, intervalProduction, type);
+        this.typeComposantList = typeComposantList;
+        this.composantUsineList = new ArrayList<ComposantUsine>();
     }
 
-    public List<List<ComposantEntree>> getComposantsEntreeList() {
-        return composantsEntreeList;
+    public List<TypeComposant> getTypeComposantList() {
+        return typeComposantList;
     }
 
-    public void setComposantsEntreeList(List<List<ComposantEntree>> composantsEntreeList) {
-        this.composantsEntreeList = composantsEntreeList;
+    public void setTypeComposantList(List<TypeComposant> typeComposantList) {
+        this.typeComposantList = typeComposantList;
     }
+
+    public List<ComposantUsine> getComposantUsineList() {
+        return composantUsineList;
+    }
+
+    public void setComposantUsineList(List<ComposantUsine> composantUsineList) {
+        this.composantUsineList = composantUsineList;
+    }
+
+    public void addComposantUsine(ComposantUsine composantUsine){this.composantUsineList.add(composantUsine);}
 
     @Override
     public String toString() {
         return "UsineAvecEntree{" +
-                "composantsEntreeList=" + composantsEntreeList +
-                ", composantSortie=" + composantSortie +
+                "typeComposantList=" + typeComposantList +
+                ", composantUsineList=" + composantUsineList +
+                ", typeComposantSortie=" + typeComposantSortie +
                 ", intervalProduction=" + intervalProduction +
                 ", type='" + type + '\'' +
                 ", iconesUsine=" + iconesUsine +

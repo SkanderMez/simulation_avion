@@ -14,15 +14,16 @@ public class Simulation {
 	/**
 	 * Cette classe représente l'application dans son ensemble.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
 		MetadonneeConfig metadonneeConfig = new MetadonneeConfig();
 		SimulationConfig c = new SimulationConfig(metadonneeConfig);
+		//System.out.println(c.getCheminInstances());
 		try {
 			List<UsineSimulation> usineSimulationList = c.getUsinesSimulationInstances();
 
 			Environnement environnement = new Environnement();
-			FenetrePrincipale fenetre = new FenetrePrincipale();
-			fenetre.setUsineSimulationList(usineSimulationList);
+		FenetrePrincipale fenetre = new FenetrePrincipale();
+		fenetre.setUsineSimulationList(usineSimulationList);
 
 			fenetre.getPanneauPrincipal().setUsineSimulationList(usineSimulationList);
 

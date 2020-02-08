@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Usine extends Element{
+public abstract class Usine {
 
     List<IconeUsine> iconesUsine = Arrays.asList(new IconeUsine[3]);
 

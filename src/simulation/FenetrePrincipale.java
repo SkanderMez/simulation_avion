@@ -3,8 +3,7 @@ package simulation;
 import config.MetadonneeConfig;
 import config.SimulationConfig;
 import org.xml.sax.SAXException;
-import reseau.Composant;
-import reseau.Usine;
+import reseau.TypeComposant;
 import reseau.UsineAvecEntree;
 import reseau.UsineProduction;
 
@@ -12,7 +11,6 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -52,14 +50,14 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 			for(UsineSimulation usineSimulation:usineSimulationList){
 				if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
 					UsineAvecEntree usineAvecEntree = (UsineAvecEntree) usineSimulation.getUsine();
-					if (usineAvecEntree.veriferValiditeStock()) {
+					if (usineSimulation.veriferValiditeStock()) {
 
 						//Gestion des icones
 						usineSimulation.decrementerTempsRestantPourProduction();
 						usineSimulation.modifierIconeCourante();
 
 						if (usineSimulation.getTempsRestantPourProduction() == 0){
-							//panneauPrincipal.getComposantList().add(((UsineAvecEntree) usineSimulation.getUsine()).getComposantSortie());
+							//panneauPrincipal.getComposantList().add(((UsineAvecEntree) usineSimulation.getUsine()).getTypeComposantSortie());
 						}
 					}
 				}
@@ -69,18 +67,17 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 					usineSimulation.modifierIconeCourante();
 					if (usineSimulation.getUsine() instanceof UsineProduction){
 						if (usineSimulation.getTempsRestantPourProduction() == 0){
-							Composant  composant= new Composant();
+							ComposantSortie composantSortie = new ComposantSortie();
 							UsineProduction usineProduction = (UsineProduction) usineSimulation.getUsine();
-							composant.setIcone(usineProduction.getComposantSortie().getIcone());
-							composant.setType(usineProduction.getComposantSortie().getType());
-							composant.setPosition(new Point(usineSimulation.getPosition()));
+							composantSortie.setTypeComposant(usineProduction.getTypeComposantSortie());
+							composantSortie.setPosition(new Point(usineSimulation.getPosition()));
 
 							UsineSimulation arrive = getUsineArriveFromUsineDepart(usineSimulation);
 
 							//Set Vitesse
 
-							composant.setVitesse(getVitesse(usineSimulation,arrive));
-							panneauPrincipal.getComposantList().put(composant,arrive);
+							composantSortie.setVitesse(getVitesse(usineSimulation,arrive));
+							panneauPrincipal.getComposantList().put(composantSortie,arrive);
 
 						}
 					}
@@ -90,8 +87,8 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 
 			}
 
-			//Set usineSimulationList in the Graphic
-			panneauPrincipal.setUsineSimulationList(usineSimulationList);
+			//Set usineSimulationList in the Graphic*/
+			//panneauPrincipal.setUsineSimulationList(usineSimulationList);
 			repaint();
 			System.out.println(evt.getNewValue());
 		}

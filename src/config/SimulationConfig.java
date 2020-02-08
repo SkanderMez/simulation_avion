@@ -92,11 +92,11 @@ public class SimulationConfig extends Configuration {
                 for (int i = 0; i < cheminList.getLength(); i++) {
                     Node cheminNode = cheminList.item(i);
                     int idDepart=Integer.parseInt(cheminNode.getAttributes().getNamedItem("de").getNodeValue());
-//                    System.out.println("DE "+idDepart);
-//                    System.out.println("Usine Depart "+getUsineById(idDepart,getUsinesSimulationInstances()));
+                  // System.out.println("DE "+idDepart);
+                  // System.out.println("Usine Depart "+getUsineById(idDepart,getUsinesSimulationInstances()));
                     int idArrivee=Integer.parseInt(cheminNode.getAttributes().getNamedItem("vers").getNodeValue());
-//                    System.out.println("VERS "+idArrivee);
-//                    System.out.println("Usine Arrivée "+getUsineById(idArrivee,getUsinesSimulationInstances()));
+                  // System.out.println("VERS "+idArrivee);
+                  //  System.out.println("Usine Arrivée "+getUsineById(idArrivee,getUsinesSimulationInstances()));
                     cheminObjectList.add(new Chemin(getUsineById(idDepart,getUsinesSimulationInstances()),getUsineById(idArrivee,getUsinesSimulationInstances())));
                 }
             }
