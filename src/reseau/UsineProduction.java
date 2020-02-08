@@ -5,8 +5,9 @@ import java.util.List;
 
 public  class UsineProduction extends Usine {
 
-    private Composant composantSortie;
-    private int intervalProduction;
+    protected Composant composantSortie;
+    protected int intervalProduction;
+    protected String type;
 
 
     public  void arreterProduction(){
@@ -16,16 +17,12 @@ public  class UsineProduction extends Usine {
         // do something
     }
 
-    public UsineProduction(int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction) {
-        super(id, iconesUsine);
-        this.composantSortie = composantSortie;
-        this.intervalProduction = intervalProduction;
-    }
 
-    public UsineProduction(Point position, int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction) {
-        super(position, id, iconesUsine);
+    public UsineProduction(List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, String type) {
+        super(iconesUsine);
         this.composantSortie = composantSortie;
         this.intervalProduction = intervalProduction;
+        this.type = type;
     }
 
     public Composant getComposantSortie() {
@@ -44,14 +41,21 @@ public  class UsineProduction extends Usine {
         this.intervalProduction = intervalProduction;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "UsineProduction{" +
                 "composantSortie=" + composantSortie +
                 ", intervalProduction=" + intervalProduction +
-                ", id=" + id +
+                ", type='" + type + '\'' +
                 ", iconesUsine=" + iconesUsine +
-                ", position=" + position +
                 '}';
     }
 }

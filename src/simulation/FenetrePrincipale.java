@@ -1,20 +1,35 @@
 package simulation;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import config.MetadonneeConfig;
+import config.SimulationConfig;
+import org.xml.sax.SAXException;
+import reseau.Composant;
+import reseau.Usine;
+import reseau.UsineAvecEntree;
+import reseau.UsineProduction;
+
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class FenetrePrincipale extends JFrame implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TITRE_FENETRE = "Laboratoire 1 : LOG121 - Simulation";
 	private static final Dimension DIMENSION = new Dimension(700, 700);
+	private List<UsineSimulation> usineSimulationList;
+
+	private PanneauPrincipal panneauPrincipal;
 
 	public FenetrePrincipale() {
-		PanneauPrincipal panneauPrincipal = new PanneauPrincipal();
+		//PanneauPrincipal panneauPrincipal = new PanneauPrincipal();
+		panneauPrincipal = new PanneauPrincipal();
 		MenuFenetre menuFenetre = new MenuFenetre();
 		add(panneauPrincipal);
 		add(menuFenetre, BorderLayout.NORTH);
@@ -32,9 +47,127 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals("TEST")) {
+		if (evt.getPropertyName().equals("Tour")) {
+
+			for(UsineSimulation usineSimulation:usineSimulationList){
+				if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
+					UsineAvecEntree usineAvecEntree = (UsineAvecEntree) usineSimulation.getUsine();
+					if (usineAvecEntree.veriferValiditeStock()) {
+
+						//Gestion des icones
+						usineSimulation.decrementerTempsRestantPourProduction();
+						usineSimulation.modifierIconeCourante();
+
+						if (usineSimulation.getTempsRestantPourProduction() == 0){
+							//panneauPrincipal.getComposantList().add(((UsineAvecEntree) usineSimulation.getUsine()).getComposantSortie());
+						}
+					}
+				}
+				else{
+					//Gestion des icones
+					usineSimulation.decrementerTempsRestantPourProduction();
+					usineSimulation.modifierIconeCourante();
+					if (usineSimulation.getUsine() instanceof UsineProduction){
+						if (usineSimulation.getTempsRestantPourProduction() == 0){
+							Composant  composant= new Composant();
+							UsineProduction usineProduction = (UsineProduction) usineSimulation.getUsine();
+							composant.setIcone(usineProduction.getComposantSortie().getIcone());
+							composant.setType(usineProduction.getComposantSortie().getType());
+							composant.setPosition(new Point(usineSimulation.getPosition()));
+
+							UsineSimulation arrive = getUsineArriveFromUsineDepart(usineSimulation);
+
+							//Set Vitesse
+
+							composant.setVitesse(getVitesse(usineSimulation,arrive));
+							panneauPrincipal.getComposantList().put(composant,arrive);
+
+						}
+					}
+				}
+
+
+
+			}
+
+			//Set usineSimulationList in the Graphic
+			panneauPrincipal.setUsineSimulationList(usineSimulationList);
 			repaint();
 			System.out.println(evt.getNewValue());
 		}
+	}
+
+	public Point getVitesse(UsineSimulation depart,UsineSimulation arrive){
+		Point vitesse = new Point();
+		int xDepart = (int)depart.getPosition().getX();
+		int xArrive = (int)arrive.getPosition().getX();
+		int yDepart = (int)depart.getPosition().getY();
+		int yArrive = (int)arrive.getPosition().getY();
+		if (xDepart == xArrive){
+			vitesse.x=0;
+			vitesse.y=1;
+		}
+		if (yDepart == yArrive){
+			vitesse.x=1;
+			vitesse.y=0;
+		}
+
+		if (xDepart > xArrive && yDepart>yArrive){
+			vitesse.x=-1;
+			vitesse.y=-1;
+		}
+		if (xDepart > xArrive && yDepart<yArrive){
+			vitesse.x=-1;
+			vitesse.y=1;
+		}
+		if (xDepart < xArrive && yDepart<yArrive){
+			vitesse.x=1;
+			vitesse.y=1;
+		}
+		if (xDepart < xArrive && yDepart>yArrive){
+			vitesse.x=1;
+			vitesse.y=-1;
+		}
+
+		return vitesse;
+
+	}
+
+	public UsineSimulation getUsineArriveFromUsineDepart(UsineSimulation depart) {
+		SimulationConfig simulationConfig = new SimulationConfig(new MetadonneeConfig());
+		List<Chemin> cheminList;
+		try {
+			cheminList = simulationConfig.getCheminInstances();
+			for (Chemin chemin:cheminList){
+				if (chemin.getDepart().getId()==depart.getId()){
+					System.out.println("returned "+chemin.getArrivee());
+					return chemin.getArrivee();
+				}
+			}
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public List<UsineSimulation> getUsineSimulationList() {
+		return usineSimulationList;
+	}
+
+	public void setUsineSimulationList(List<UsineSimulation> usineSimulationList) {
+		this.usineSimulationList = usineSimulationList;
+	}
+
+	public PanneauPrincipal getPanneauPrincipal() {
+		return panneauPrincipal;
+	}
+
+	public void setPanneauPrincipal(PanneauPrincipal panneauPrincipal) {
+		this.panneauPrincipal = panneauPrincipal;
 	}
 }

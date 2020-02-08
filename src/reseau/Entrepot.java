@@ -6,7 +6,7 @@ import java.util.List;
 public class Entrepot extends Usine {
 
     private List<UsineProduction> observers;
-    private Composant entree;
+    private List<ComposantEntree> entree;
 
 
     public void notifierUsines(){
@@ -14,8 +14,8 @@ public class Entrepot extends Usine {
     }
 
 
-    public Entrepot(Point position, int id, List<IconeUsine> iconesUsine, List<UsineProduction> observers, Composant entree) {
-        super(position, id, iconesUsine);
+    public Entrepot(List<IconeUsine> iconesUsine, List<UsineProduction> observers, List<ComposantEntree> entree) {
+        super(iconesUsine);
         this.observers = observers;
         this.entree = entree;
     }
@@ -28,11 +28,11 @@ public class Entrepot extends Usine {
         this.observers = observers;
     }
 
-    public Composant getEntree() {
+    public List<ComposantEntree> getEntree() {
         return entree;
     }
 
-    public void setEntree(Composant entree) {
+    public void setEntree(List<ComposantEntree> entree) {
         this.entree = entree;
     }
 

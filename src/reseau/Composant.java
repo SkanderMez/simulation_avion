@@ -5,20 +5,18 @@ import java.awt.*;
 public class Composant extends Element {
 
     protected Point vitesse;
+    protected Point position;
     protected Icone icone;
+    protected String type;
 
-    public Composant() {
+    public Composant(){
     }
 
-    public Composant(Point vitesse, Icone icone) {
+    public Composant(Point vitesse, Point position, Icone icone, String type) {
         this.vitesse = vitesse;
+        this.position = position;
         this.icone = icone;
-    }
-
-    public Composant(Point position, Point vitesse, Icone icone) {
-        super(position);
-        this.vitesse = vitesse;
-        this.icone = icone;
+        this.type = type;
     }
 
     public Point getVitesse() {
@@ -29,6 +27,14 @@ public class Composant extends Element {
         this.vitesse = vitesse;
     }
 
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
+    }
+
     public Icone getIcone() {
         return icone;
     }
@@ -37,11 +43,21 @@ public class Composant extends Element {
         this.icone = icone;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Composant{" +
                 "vitesse=" + vitesse +
+                ", position=" + position +
                 ", icone=" + icone +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

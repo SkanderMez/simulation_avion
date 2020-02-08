@@ -1,28 +1,30 @@
-package reseau;
+package simulation;
+
+import reseau.Usine;
 
 public class Chemin {
 
-    private Usine depart;
-    private Usine arrivee;
+    private UsineSimulation depart;
+    private UsineSimulation arrivee;
 
-    public Chemin(Usine depart, Usine arrivee) {
+    public Chemin(UsineSimulation depart, UsineSimulation arrivee) {
         this.depart = depart;
         this.arrivee = arrivee;
     }
 
-    public Usine getDepart() {
+    public UsineSimulation getDepart() {
         return depart;
     }
 
-    public void setDepart(Usine depart) {
+    public void setDepart(UsineSimulation depart) {
         this.depart = depart;
     }
 
-    public Usine getArrivee() {
+    public UsineSimulation getArrivee() {
         return arrivee;
     }
 
-    public void setArrivee(Usine arrivee) {
+    public void setArrivee(UsineSimulation arrivee) {
         this.arrivee = arrivee;
     }
 

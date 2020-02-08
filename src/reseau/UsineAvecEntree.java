@@ -1,38 +1,50 @@
 package reseau;
 
 
-import java.awt.*;
 import java.util.List;
 
 public class UsineAvecEntree extends UsineProduction {
 
-    protected List<ComposantEntree> composantsEntree;
+    protected List<List<ComposantEntree>> composantsEntreeList;
 
-    public UsineAvecEntree(int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, List<ComposantEntree> composantsEntree) {
-        super(id, iconesUsine, composantSortie, intervalProduction);
-        this.composantsEntree = composantsEntree;
+
+    public boolean veriferValiditeStock(){
+
+        boolean isValid = true;
+
+        for(List<ComposantEntree> composantEntree: composantsEntreeList){
+            for (ComposantEntree composant : composantEntree){
+                if(composant.getQuantiteOrCapacity() < composantEntree.size()){
+                    isValid = false;
+                    return isValid;
+                }
+            }
+        }
+
+        return isValid;
     }
 
-    public UsineAvecEntree(Point position, int id, List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, List<ComposantEntree> composantsEntree) {
-        super(position, id, iconesUsine, composantSortie, intervalProduction);
-        this.composantsEntree = composantsEntree;
+    public UsineAvecEntree(List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, String type, List<List<ComposantEntree>> composantsEntreeList) {
+        super(iconesUsine, composantSortie, intervalProduction, type);
+        this.composantsEntreeList = composantsEntreeList;
     }
 
-    public List<ComposantEntree> getComposantsEntree() {
-        return composantsEntree;
+    public List<List<ComposantEntree>> getComposantsEntreeList() {
+        return composantsEntreeList;
     }
 
-    public void setComposantsEntree(List<ComposantEntree> composantsEntree) {
-        this.composantsEntree = composantsEntree;
+    public void setComposantsEntreeList(List<List<ComposantEntree>> composantsEntreeList) {
+        this.composantsEntreeList = composantsEntreeList;
     }
 
     @Override
     public String toString() {
         return "UsineAvecEntree{" +
-                "composantsEntree=" + composantsEntree +
-                ", id=" + id +
+                "composantsEntreeList=" + composantsEntreeList +
+                ", composantSortie=" + composantSortie +
+                ", intervalProduction=" + intervalProduction +
+                ", type='" + type + '\'' +
                 ", iconesUsine=" + iconesUsine +
-                ", position=" + position +
                 '}';
     }
 }

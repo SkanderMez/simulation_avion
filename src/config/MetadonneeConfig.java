@@ -1,6 +1,5 @@
 package config;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -13,28 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MetadonneeConfig extends Configuration {
-
-    public NodeList recupererUsines() throws IOException, SAXException, ParserConfigurationException {
-
-        Document doc = readXmlFile();
-
-        //lire la balise metadonnees
-        Node metadonnees = doc.getElementsByTagName("metadonnees").item(0);
-
-        //verifier que la balise metadonnes a des fils ( qui seront les usines)
-        if (metadonnees.getNodeType() == Node.ELEMENT_NODE) {
-
-            //caster la balise metadonnees en Element
-            Element eElement = (Element) metadonnees;
-
-            //Lire les usines
-            NodeList usineList = getSpecificNodeListFromElement(eElement, "usine");
-
-            return usineList;
-        }
-        return null;
-    }
-
 
     //Cette methode retourne les instances icones usine pour une usine spécifiée en paramètre
     public List<IconeUsine> getIconesUsineInstances(Node usine) throws ParserConfigurationException, SAXException, IOException {
@@ -64,9 +41,9 @@ public class MetadonneeConfig extends Configuration {
     }
 
     //Cette methode retourne les instances entree usine pour une usine spécifiée en paramètre
-    public List<ComposantEntree> getComposantsEntreeUsineInstances(Node usine) {
+    public List<List<ComposantEntree>> getComposantsEntreeUsineInstances(Node usine) {
 
-        List<ComposantEntree> composantsEntreeObjectsList = new ArrayList<>();
+        List<List<ComposantEntree>> listcomposantsEntreeObjectsList = new ArrayList<>();
 
         if (usine.getNodeType() == Node.ELEMENT_NODE) {
             Element usineElement = (Element) usine;
@@ -78,20 +55,29 @@ public class MetadonneeConfig extends Configuration {
                 for (int compteurEntrees = 0; compteurEntrees < entreeList.getLength(); compteurEntrees++) {
                     Node entree = entreeList.item(compteurEntrees);
                     if (usine.getAttributes().getNamedItem("type").getNodeValue().equals("entrepot")) {
-                            composantsEntreeObjectsList.add(new ComposantEntree(null, null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), Integer.parseInt(entree.getAttributes().getNamedItem("capacite").getNodeValue())));
+                        //Creer une liste d'entrees dans laquelle on va stocker le nombre de composant entrés dans l'entrepot
+                        List<ComposantEntree> composantsEntreeObjectsList = new ArrayList<>();
+                        composantsEntreeObjectsList.add(new ComposantEntree(null, null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), entree.getAttributes().getNamedItem("type").getNodeValue(), Integer.parseInt(entree.getAttributes().getNamedItem("capacite").getNodeValue())));
+                        //ajouter la liste d'entrees dans une liste qui stockera les types de composant que possède un entrepot(cas exceptionnel 1)
+                        listcomposantsEntreeObjectsList.add(composantsEntreeObjectsList);
                     } else {
-                        composantsEntreeObjectsList.add(new ComposantEntree(null,null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), Integer.parseInt(entree.getAttributes().getNamedItem("quantite").getNodeValue())));
+                        //Creer une liste d'entrees dans laquelle on va stocker le nombre de composant entrés dans l'usine
+                        List<ComposantEntree> composantsEntreeObjectsList = new ArrayList<>();
+                        ComposantEntree c = new ComposantEntree(null, null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), entree.getAttributes().getNamedItem("type").getNodeValue(), Integer.parseInt(entree.getAttributes().getNamedItem("quantite").getNodeValue()));
+                        composantsEntreeObjectsList.add(c);
+                        //ajouter la liste d'entrees dans une liste qui stockera les types de composant que possède une unsine
+                        listcomposantsEntreeObjectsList.add(composantsEntreeObjectsList);
                     }
                 }
             }
         }
 
-        return composantsEntreeObjectsList;
+        return listcomposantsEntreeObjectsList;
     }
 
     //Cette methode retourne l' instances sortie usine pour une usine spécifiée en paramètre
     public Composant getComposantSortieUsineInstances(Node usine) {
-        Composant composantSortieObject= new Composant();
+        Composant composantSortieObject = new Composant();
 
         if (usine.getNodeType() == Node.ELEMENT_NODE) {
             Element usineElement = (Element) usine;
@@ -99,7 +85,7 @@ public class MetadonneeConfig extends Configuration {
             if (nodeExistsInElement(usineElement, "sortie")) {
                 //Lire la sortie ( une seule sortie par usine )
                 Node sortie = getSpecificNodeListFromElement(usineElement, "sortie").item(0);
-                    composantSortieObject = new Composant(null,null ,new Icone("src/ressources/" + sortie.getAttributes().getNamedItem("type").getNodeValue() + ".png"));
+                composantSortieObject = new Composant(null, null, new Icone("src/ressources/" + sortie.getAttributes().getNamedItem("type").getNodeValue() + ".png"), sortie.getAttributes().getNamedItem("type").getNodeValue());
             }
         }
 
@@ -129,33 +115,30 @@ public class MetadonneeConfig extends Configuration {
 
         List<Usine> usineObjectsList = new ArrayList<>();
 
-        NodeList usineList = recupererUsines();
+        NodeList usineList = getAllNodeFromSpecificNodeName("metadonnees", "usine");
         for (int compteurUsines = 0; compteurUsines < usineList.getLength(); compteurUsines++) {
             Node usine = usineList.item(compteurUsines);
             Element usineElement = (Element) usine;
             List<IconeUsine> iconesUsineList = getIconesUsineInstances(usine);
-            List<ComposantEntree> composantEntreeList = getComposantsEntreeUsineInstances(usine);
+            List<List<ComposantEntree>> composantEntreeList = getComposantsEntreeUsineInstances(usine);
+
             Composant composantSortie = getComposantSortieUsineInstances(usine);
             int intervalProductionValue = getUsinesIntervalProductionValue(usine);
 
             //Usine avec entre sortie
             if (nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")) {
-                    usineObjectsList.add(new UsineAvecEntree(null,0,iconesUsineList,composantSortie,intervalProductionValue,composantEntreeList));
-            }
-            //Usine avec sortie sans entree
-            else if(!nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")){
-
-                usineObjectsList.add(new UsineProduction(null,0,iconesUsineList,composantSortie, intervalProductionValue));
-
-            }
+                usineObjectsList.add(new UsineAvecEntree( iconesUsineList, composantSortie, intervalProductionValue, usineElement.getAttribute("type"), composantEntreeList));
+                    //Usine avec sortie sans entree
+            } else if (!nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")) {
+                usineObjectsList.add(new UsineProduction( iconesUsineList, composantSortie, intervalProductionValue, usineElement.getAttribute("type")));
+                }
             // Entrepot
-            else if (nodeExistsInElement(usineElement, "entree") && !nodeExistsInElement(usineElement, "sortie")){
-
-                usineObjectsList.add(new Entrepot(null,0,iconesUsineList,null,composantEntreeList.get(0)));
-
-            }
+            else if (nodeExistsInElement(usineElement, "entree") && !nodeExistsInElement(usineElement, "sortie")) {
+                usineObjectsList.add(new Entrepot( iconesUsineList, null, composantEntreeList.get(0)));
+                }
 
         }
+
 
         return usineObjectsList;
     }

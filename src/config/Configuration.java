@@ -2,6 +2,7 @@ package config;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -32,6 +33,29 @@ public abstract class Configuration {
         NodeList nodeList = getSpecificNodeListFromElement(element,nodeName);
         return nodeList.getLength()!=0;
     }
+
+    //A mettre dans la classe Configuration (utilisé aussi dans simulation)
+    public NodeList getAllNodeFromSpecificNodeName(String balise, String node) throws IOException, SAXException, ParserConfigurationException {
+
+        Document doc = readXmlFile();
+
+        //lire la balise racine ( simulation ou metadonnees)
+        Node metadonnees = doc.getElementsByTagName(balise).item(0);
+
+        //verifier que la balise metadonnes/simulation a des fils ( qui seront les usines)
+        if (metadonnees.getNodeType() == Node.ELEMENT_NODE) {
+
+            //caster la balise metadonnees/simulation en Element
+            Element eElement = (Element) metadonnees;
+
+            //Lire les nodes
+            NodeList nodeList = getSpecificNodeListFromElement(eElement, node);
+
+            return nodeList;
+        }
+        return null;
+    }
+
 
 
 }
