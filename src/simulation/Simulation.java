@@ -17,6 +17,7 @@ public class Simulation {
 	public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException {
 		MetadonneeConfig metadonneeConfig = new MetadonneeConfig();
 		SimulationConfig c = new SimulationConfig(metadonneeConfig);
+		System.out.println(c.getUsinesSimulationInstances());
 		System.out.println(c.getCheminInstances());
 		try {
 			List<UsineSimulation> usineSimulationList = c.getUsinesSimulationInstances();
