@@ -2,25 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71e2a073-4dfe-4809-91e6-2028a53d23aa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/reseau/ComposantUsine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reseau/QuantiteDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/reseau/TypeComposant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/simulation/Composant.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/simulation/ComposantSortie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/MetadonneeConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/MetadonneeConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/SimulationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/SimulationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reseau/Composant.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reseau/ComposantEntree.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reseau/Entrepot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/reseau/Entrepot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reseau/Usine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/reseau/Usine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reseau/UsineAvecEntree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/reseau/UsineAvecEntree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reseau/UsineProduction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/reseau/UsineProduction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/simulation/Environnement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulation/Environnement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/simulation/FenetrePrincipale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulation/FenetrePrincipale.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/simulation/PanneauPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulation/PanneauPrincipal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/simulation/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulation/Simulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/simulation/UsineSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/simulation/UsineSimulation.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -109,7 +91,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/simulation/Environnement.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="102">
@@ -121,23 +103,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/simulation/FenetrePrincipale.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="98" column="108" selection-start-line="98" selection-start-column="108" selection-end-line="98" selection-end-column="108" />
+            <state relative-caret-position="17">
+              <caret line="48" selection-start-line="48" selection-end-line="48" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#getVitesse#0;class#FenetrePrincipale#0" />
-                <element signature="e#7566#7567#0" expanded="true" />
-                <element signature="e#7805#7806#0" expanded="true" />
-                <element signature="e#7935#7936#0" expanded="true" />
+                <element signature="e#7578#7579#0" expanded="true" />
+                <element signature="e#7817#7818#0" expanded="true" />
+                <element signature="e#7947#7948#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ressources/configuration.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
+            <state relative-caret-position="205">
               <caret line="64" column="38" selection-start-line="64" selection-end-line="65" />
             </state>
           </provider>
@@ -265,11 +247,11 @@
         <option value="$PROJECT_DIR$/src/config/MetadonneeConfig.java" />
         <option value="$PROJECT_DIR$/src/simulation/Composant.java" />
         <option value="$PROJECT_DIR$/src/simulation/ComposantSortie.java" />
-        <option value="$PROJECT_DIR$/src/simulation/Environnement.java" />
         <option value="$PROJECT_DIR$/src/simulation/PanneauPrincipal.java" />
         <option value="$PROJECT_DIR$/src/simulation/Simulation.java" />
         <option value="$PROJECT_DIR$/src/simulation/UsineSimulation.java" />
         <option value="$PROJECT_DIR$/src/simulation/FenetrePrincipale.java" />
+        <option value="$PROJECT_DIR$/src/simulation/Environnement.java" />
       </list>
     </option>
   </component>
@@ -390,7 +372,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="109585000" />
+    <option name="totallyTimeSpent" value="110925000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -403,8 +385,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22768533" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22768533" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -413,12 +396,12 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.14566284" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.10310966" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.48772505" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.049099836" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.12111293" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="ConsoleMavenPlugin" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
@@ -675,13 +658,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/simulation/Environnement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="39" selection-start-line="6" selection-start-column="39" selection-end-line="6" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/simulation/UsineSimulation.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -713,24 +689,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/ressources/configuration.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="64" column="38" selection-start-line="64" selection-end-line="65" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/simulation/FenetrePrincipale.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="98" column="108" selection-start-line="98" selection-start-column="108" selection-end-line="98" selection-end-column="108" />
+        <state relative-caret-position="17">
+          <caret line="48" selection-start-line="48" selection-end-line="48" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#getVitesse#0;class#FenetrePrincipale#0" />
-            <element signature="e#7566#7567#0" expanded="true" />
-            <element signature="e#7805#7806#0" expanded="true" />
-            <element signature="e#7935#7936#0" expanded="true" />
+            <element signature="e#7578#7579#0" expanded="true" />
+            <element signature="e#7817#7818#0" expanded="true" />
+            <element signature="e#7947#7948#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ressources/configuration.xml">
+    <entry file="file://$PROJECT_DIR$/src/simulation/Environnement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="64" column="38" selection-start-line="64" selection-end-line="65" />
+        <state relative-caret-position="102">
+          <caret line="6" column="39" selection-start-line="6" selection-start-column="39" selection-end-line="6" selection-end-column="39" />
         </state>
       </provider>
     </entry>
