@@ -1,11 +1,10 @@
 package reseau;
 
-import java.awt.*;
 import java.util.List;
 
 public  class UsineProduction extends Usine {
 
-    protected Composant composantSortie;
+    protected TypeComposant typeComposantSortie;
     protected int intervalProduction;
     protected String type;
 
@@ -18,19 +17,19 @@ public  class UsineProduction extends Usine {
     }
 
 
-    public UsineProduction(List<IconeUsine> iconesUsine, Composant composantSortie, int intervalProduction, String type) {
+    public UsineProduction(List<IconeUsine> iconesUsine, TypeComposant typeComposantSortie, int intervalProduction, String type) {
         super(iconesUsine);
-        this.composantSortie = composantSortie;
+        this.typeComposantSortie = typeComposantSortie;
         this.intervalProduction = intervalProduction;
         this.type = type;
     }
 
-    public Composant getComposantSortie() {
-        return composantSortie;
+    public TypeComposant getTypeComposantSortie() {
+        return typeComposantSortie;
     }
 
-    public void setComposantSortie(Composant composantSortie) {
-        this.composantSortie = composantSortie;
+    public void setTypeComposantSortie(TypeComposant typeComposantSortie) {
+        this.typeComposantSortie = typeComposantSortie;
     }
 
     public int getIntervalProduction() {
@@ -52,7 +51,7 @@ public  class UsineProduction extends Usine {
     @Override
     public String toString() {
         return "UsineProduction{" +
-                "composantSortie=" + composantSortie +
+                "typeComposantSortie=" + typeComposantSortie +
                 ", intervalProduction=" + intervalProduction +
                 ", type='" + type + '\'' +
                 ", iconesUsine=" + iconesUsine +

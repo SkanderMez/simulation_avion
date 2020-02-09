@@ -3,6 +3,8 @@ package simulation;
 import reseau.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsineSimulation {
 
@@ -16,8 +18,43 @@ public class UsineSimulation {
 
     private int tempsRestantPourProduction = 0;
 
+    private List<Composant> stock = new ArrayList();
 
-    public UsineSimulation(int id, Usine usine, Point position, Icone iconeCourrante) {
+    public void addToStock(Composant composant){this.stock.add(composant);}
+
+    public int getStockByTypeComposant(TypeComposant typeComposant){
+        int nb =0;
+        for(Composant composant: stock){
+            if(composant.getTypeComposant().getType()==typeComposant.getType())
+                nb++;
+        }
+        return nb;
+    }
+
+    public boolean veriferValiditeStock(){
+       boolean isValid = true;
+       if(usine instanceof UsineAvecEntree) {
+           UsineAvecEntree usineAvecEntree = (UsineAvecEntree)usine;
+           List<TypeComposant> typeComposants = usineAvecEntree.getTypeComposantList();
+           for(TypeComposant typeComposant:typeComposants) {
+               int quantité = usineAvecEntree.getQuantiteByTypeComposant(typeComposant);
+               int nb = getStockByTypeComposant(typeComposant);
+//               System.out.println("*************************************************");
+//               System.out.println("Quantity  :  " + quantité);
+//               System.out.println("Stock  :  " + nb);
+//               System.out.println("*************************************************");
+               if (nb < quantité) {
+                   isValid = false;
+                   return isValid;
+               }
+
+           }
+       }
+        return isValid;
+    }
+
+
+  /*  public UsineSimulation(int id, Usine usine, Point position, Icone iconeCourrante) {
         this.id = id;
         this.usine = usine;
         this.position = position;
@@ -26,11 +63,11 @@ public class UsineSimulation {
             UsineProduction usineProduction = (UsineProduction) usine;
             this.tempsRestantPourProduction = usineProduction.getIntervalProduction();
         }
-    }
+    }*/
 
     public void modifierIconeCourante() {
         if (this.usine instanceof UsineAvecEntree) {
-            System.out.println("hahaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            //System.out.println("hahaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             UsineAvecEntree UsineAvecEntree = (UsineAvecEntree) this.usine;
             int intervalProduction = UsineAvecEntree.getIntervalProduction();
             double diff = intervalProduction - tempsRestantPourProduction;
@@ -48,8 +85,8 @@ public class UsineSimulation {
             verifierPourcentage(pourcentage);
         } else if (this.usine instanceof Entrepot) {
             Entrepot entrepot = (Entrepot) this.usine;
-            int capacite = entrepot.getEntree().get(0).getQuantiteOrCapacity();
-            int stock = entrepot.getEntree().size();
+            int capacite = entrepot.getCapacite();
+            int stock = this.stock.size();
             double pourcentage = (stock / capacite) * 100;
             verifierPourcentage(pourcentage);
         }
@@ -84,6 +121,15 @@ public class UsineSimulation {
         this.tempsRestantPourProduction--;
         return false;
 
+    }
+
+    public UsineSimulation(int id, Usine usine, Point position, Icone iconeCourrante) {
+        this.id = id;
+        this.usine = usine;
+        this.position = position;
+        this.iconeCourrante = iconeCourrante;
+        this.tempsRestantPourProduction = 0;
+        this.stock = new ArrayList<>();
     }
 
     public int getId() {
@@ -126,6 +172,14 @@ public class UsineSimulation {
         this.tempsRestantPourProduction = tempsRestantPourProduction;
     }
 
+    public List<Composant> getStock() {
+        return stock;
+    }
+
+    public void setStock(List<Composant> stock) {
+        this.stock = stock;
+    }
+
     @Override
     public String toString() {
         return "UsineSimulation{" +
@@ -133,6 +187,8 @@ public class UsineSimulation {
                 ", usine=" + usine +
                 ", position=" + position +
                 ", iconeCourrante=" + iconeCourrante +
+                ", tempsRestantPourProduction=" + tempsRestantPourProduction +
+                ", stock=" + stock +
                 '}';
     }
 }

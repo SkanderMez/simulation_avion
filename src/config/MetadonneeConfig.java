@@ -41,9 +41,9 @@ public class MetadonneeConfig extends Configuration {
     }
 
     //Cette methode retourne les instances entree usine pour une usine spécifiée en paramètre
-    public List<List<ComposantEntree>> getComposantsEntreeUsineInstances(Node usine) {
+    public List<QuantiteDTO> getComposantsEntreeUsineInstances(Node usine) {
 
-        List<List<ComposantEntree>> listcomposantsEntreeObjectsList = new ArrayList<>();
+        List<QuantiteDTO>  composantsEntreeObjectsList = new ArrayList<>();
 
         if (usine.getNodeType() == Node.ELEMENT_NODE) {
             Element usineElement = (Element) usine;
@@ -55,29 +55,30 @@ public class MetadonneeConfig extends Configuration {
                 for (int compteurEntrees = 0; compteurEntrees < entreeList.getLength(); compteurEntrees++) {
                     Node entree = entreeList.item(compteurEntrees);
                     if (usine.getAttributes().getNamedItem("type").getNodeValue().equals("entrepot")) {
+                        TypeComposant typeComposant = new TypeComposant(new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), entree.getAttributes().getNamedItem("type").getNodeValue());
                         //Creer une liste d'entrees dans laquelle on va stocker le nombre de composant entrés dans l'entrepot
-                        List<ComposantEntree> composantsEntreeObjectsList = new ArrayList<>();
-                        composantsEntreeObjectsList.add(new ComposantEntree(null, null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), entree.getAttributes().getNamedItem("type").getNodeValue(), Integer.parseInt(entree.getAttributes().getNamedItem("capacite").getNodeValue())));
+                        QuantiteDTO capacite= new QuantiteDTO(typeComposant,Integer.parseInt(entree.getAttributes().getNamedItem("capacite").getNodeValue()));
+                        composantsEntreeObjectsList.add(capacite);
                         //ajouter la liste d'entrees dans une liste qui stockera les types de composant que possède un entrepot(cas exceptionnel 1)
-                        listcomposantsEntreeObjectsList.add(composantsEntreeObjectsList);
                     } else {
                         //Creer une liste d'entrees dans laquelle on va stocker le nombre de composant entrés dans l'usine
-                        List<ComposantEntree> composantsEntreeObjectsList = new ArrayList<>();
-                        ComposantEntree c = new ComposantEntree(null, null, new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), entree.getAttributes().getNamedItem("type").getNodeValue(), Integer.parseInt(entree.getAttributes().getNamedItem("quantite").getNodeValue()));
-                        composantsEntreeObjectsList.add(c);
+                       // List<ComposantUsine> composantsEntreeObjectsList = new ArrayList<>();
+                        TypeComposant c = new TypeComposant(new Icone("src/ressources/" + entree.getAttributes().getNamedItem("type").getNodeValue() + ".png"), entree.getAttributes().getNamedItem("type").getNodeValue());
+                        QuantiteDTO quantite = new QuantiteDTO(c,Integer.parseInt(entree.getAttributes().getNamedItem("quantite").getNodeValue()));
+                        composantsEntreeObjectsList.add(quantite);
                         //ajouter la liste d'entrees dans une liste qui stockera les types de composant que possède une unsine
-                        listcomposantsEntreeObjectsList.add(composantsEntreeObjectsList);
+                        //listcomposantsEntreeObjectsList.add(composantsEntreeObjectsList);
                     }
                 }
             }
         }
 
-        return listcomposantsEntreeObjectsList;
+        return composantsEntreeObjectsList;
     }
 
     //Cette methode retourne l' instances sortie usine pour une usine spécifiée en paramètre
-    public Composant getComposantSortieUsineInstances(Node usine) {
-        Composant composantSortieObject = new Composant();
+    public TypeComposant getComposantSortieUsineInstances(Node usine) {
+        TypeComposant typeComposantSortieObject = new TypeComposant();
 
         if (usine.getNodeType() == Node.ELEMENT_NODE) {
             Element usineElement = (Element) usine;
@@ -85,11 +86,11 @@ public class MetadonneeConfig extends Configuration {
             if (nodeExistsInElement(usineElement, "sortie")) {
                 //Lire la sortie ( une seule sortie par usine )
                 Node sortie = getSpecificNodeListFromElement(usineElement, "sortie").item(0);
-                composantSortieObject = new Composant(null, null, new Icone("src/ressources/" + sortie.getAttributes().getNamedItem("type").getNodeValue() + ".png"), sortie.getAttributes().getNamedItem("type").getNodeValue());
+                typeComposantSortieObject = new TypeComposant(new Icone("src/ressources/" + sortie.getAttributes().getNamedItem("type").getNodeValue() + ".png"), sortie.getAttributes().getNamedItem("type").getNodeValue());
             }
         }
 
-        return composantSortieObject;
+        return typeComposantSortieObject;
     }
 
     //Cette methode retourne la valeur de l'intervalde production d'une usine donnée
@@ -120,21 +121,29 @@ public class MetadonneeConfig extends Configuration {
             Node usine = usineList.item(compteurUsines);
             Element usineElement = (Element) usine;
             List<IconeUsine> iconesUsineList = getIconesUsineInstances(usine);
-            List<List<ComposantEntree>> composantEntreeList = getComposantsEntreeUsineInstances(usine);
-
-            Composant composantSortie = getComposantSortieUsineInstances(usine);
+            List<QuantiteDTO> composantEntreeList = getComposantsEntreeUsineInstances(usine);
+            List<TypeComposant> composantsEntree = new ArrayList<>();
+            for(QuantiteDTO qté:composantEntreeList){composantsEntree.add(qté.getTypeComposant());}
+            TypeComposant typeComposantSortie = getComposantSortieUsineInstances(usine);
             int intervalProductionValue = getUsinesIntervalProductionValue(usine);
 
             //Usine avec entre sortie
             if (nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")) {
-                usineObjectsList.add(new UsineAvecEntree( iconesUsineList, composantSortie, intervalProductionValue, usineElement.getAttribute("type"), composantEntreeList));
+                UsineAvecEntree usineE = new UsineAvecEntree(iconesUsineList, typeComposantSortie, intervalProductionValue, usineElement.getAttribute("type"), composantsEntree);
+               // System.out.println(usineE);
+                usineObjectsList.add(usineE);
+                for(QuantiteDTO qté: composantEntreeList) {
+                    ComposantUsine composantUsine = new ComposantUsine(usineE,qté.getTypeComposant(),qté.getQuantiteOuCapacite());
+                    usineE.addComposantUsine(composantUsine);
+
+                }
                     //Usine avec sortie sans entree
             } else if (!nodeExistsInElement(usineElement, "entree") && nodeExistsInElement(usineElement, "sortie")) {
-                usineObjectsList.add(new UsineProduction( iconesUsineList, composantSortie, intervalProductionValue, usineElement.getAttribute("type")));
+                usineObjectsList.add(new UsineProduction( iconesUsineList, typeComposantSortie, intervalProductionValue, usineElement.getAttribute("type")));
                 }
             // Entrepot
             else if (nodeExistsInElement(usineElement, "entree") && !nodeExistsInElement(usineElement, "sortie")) {
-                usineObjectsList.add(new Entrepot( iconesUsineList, null, composantEntreeList.get(0)));
+                usineObjectsList.add(new Entrepot( iconesUsineList, null, composantEntreeList.get(0).getTypeComposant(),composantEntreeList.get(0).getQuantiteOuCapacite()));
                 }
 
         }

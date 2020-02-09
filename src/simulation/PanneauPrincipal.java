@@ -8,14 +8,12 @@ import reseau.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.Position;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class PanneauPrincipal extends JPanel {
@@ -28,7 +26,7 @@ public class PanneauPrincipal extends JPanel {
     private int taille = 32;
 
     private List<UsineSimulation> usineSimulationList;
-    private Map<Composant, UsineSimulation> composantList = new HashMap<>();
+    private Map<ComposantSortie, UsineSimulation> composantList = new HashMap<>();
 
 
     void dessinerChemins(Graphics g) throws IOException, SAXException, ParserConfigurationException {
@@ -60,11 +58,11 @@ public class PanneauPrincipal extends JPanel {
     }
 
     void dessinerComposant(Graphics g) throws IOException {
-        Map<Composant, UsineSimulation> composantList = this.composantList;
+        Map<ComposantSortie, UsineSimulation> composantList = this.composantList;
 
         if (composantList != null) {
             composantList.forEach((composant, arrive) -> {
-                String composantIconPath = composant.getIcone().getPath();
+                String composantIconPath = composant.getTypeComposant().getIcone().getPath();
                 Point positionComposant = composant.getPosition();
 
                 if (composant.getPosition().getX() != arrive.getPosition().getX() || composant.getPosition().getY() != composant.getPosition().getY()) {
@@ -76,14 +74,7 @@ public class PanneauPrincipal extends JPanel {
                         for (UsineSimulation usineSimulation : this.usineSimulationList) {
                             if (usineSimulation.getId() == arrive.getId()) {
                                 if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
-                                    UsineAvecEntree usineAvecEntree = (UsineAvecEntree) usineSimulation.getUsine();
-                                    //boucle pour avoir la bonne liste selon le type
-                                    for (List<ComposantEntree> composantsEntree : usineAvecEntree.getComposantsEntreeList()) {
-                                        if (composantsEntree.get(0).getType().equals(composant.getType())) {
-                                            ComposantEntree c = new ComposantEntree(composantsEntree.get(0).getQuantiteOrCapacity());
-                                            composantsEntree.add(c);
-                                        }
-                                    }
+                                    usineSimulation.addToStock(new Composant(composant.getTypeComposant()));
                                 }
                             }
                         }
@@ -125,12 +116,11 @@ public class PanneauPrincipal extends JPanel {
         this.usineSimulationList = usineSimulationList;
     }
 
-
-    public Map<Composant, UsineSimulation> getComposantList() {
+    public Map<ComposantSortie, UsineSimulation> getComposantList() {
         return composantList;
     }
 
-    public void setComposantList(Map<Composant, UsineSimulation> composantList) {
+    public void setComposantList(Map<ComposantSortie, UsineSimulation> composantList) {
         this.composantList = composantList;
     }
 }

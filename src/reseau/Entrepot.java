@@ -1,23 +1,23 @@
 package reseau;
 
-import java.awt.*;
 import java.util.List;
 
 public class Entrepot extends Usine {
 
     private List<UsineProduction> observers;
-    private List<ComposantEntree> entree;
+    private TypeComposant typeComposant;
+    private int capacite;
 
 
     public void notifierUsines(){
         //Notify Method
     }
 
-
-    public Entrepot(List<IconeUsine> iconesUsine, List<UsineProduction> observers, List<ComposantEntree> entree) {
+    public Entrepot(List<IconeUsine> iconesUsine, List<UsineProduction> observers, TypeComposant typeComposant, int capacite) {
         super(iconesUsine);
         this.observers = observers;
-        this.entree = entree;
+        this.typeComposant = typeComposant;
+        this.capacite = capacite;
     }
 
     public List<UsineProduction> getObservers() {
@@ -28,19 +28,28 @@ public class Entrepot extends Usine {
         this.observers = observers;
     }
 
-    public List<ComposantEntree> getEntree() {
-        return entree;
+    public TypeComposant getTypeComposant() {
+        return typeComposant;
     }
 
-    public void setEntree(List<ComposantEntree> entree) {
-        this.entree = entree;
+    public void setTypeComposant(TypeComposant typeComposant) {
+        this.typeComposant = typeComposant;
+    }
+
+    public int getCapacite() {
+        return capacite;
+    }
+
+    public void setCapacite(int capacite) {
+        this.capacite = capacite;
     }
 
     @Override
     public String toString() {
         return "Entrepot{" +
                 "observers=" + observers +
-                ", entree=" + entree +
+                ", typeComposant=" + typeComposant +
+                ", capacite=" + capacite +
                 ", iconesUsine=" + iconesUsine +
                 '}';
     }
