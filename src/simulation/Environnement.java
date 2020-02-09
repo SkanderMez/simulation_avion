@@ -3,8 +3,8 @@ package simulation;
 import javax.swing.SwingWorker;
 
 public class Environnement extends SwingWorker<Object, String> {
-	private boolean actif = true;
-	private static final int DELAI = 10;
+	private  boolean actif = true;
+	private static final int DELAI = 1;
 	private int tour = 0;
 	
 	@Override

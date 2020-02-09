@@ -25,32 +25,31 @@ public class UsineSimulation {
     public int getStockByTypeComposant(TypeComposant typeComposant){
         int nb =0;
         for(Composant composant: stock){
-            if(composant.getTypeComposant().getType()==typeComposant.getType())
-                nb++;
+            if(composant.getTypeComposant().getType().equals(typeComposant.getType()))
+            {nb++;
+               }
         }
         return nb;
     }
 
     public boolean veriferValiditeStock(){
-       boolean isValid = true;
        if(usine instanceof UsineAvecEntree) {
            UsineAvecEntree usineAvecEntree = (UsineAvecEntree)usine;
            List<TypeComposant> typeComposants = usineAvecEntree.getTypeComposantList();
            for(TypeComposant typeComposant:typeComposants) {
                int quantité = usineAvecEntree.getQuantiteByTypeComposant(typeComposant);
                int nb = getStockByTypeComposant(typeComposant);
-//               System.out.println("*************************************************");
-//               System.out.println("Quantity  :  " + quantité);
-//               System.out.println("Stock  :  " + nb);
-//               System.out.println("*************************************************");
+/*               System.out.println("*************************************************");
+              System.out.println("Quantity  :  " + quantité);
+               System.out.println("Stock  :  " + nb);
+              System.out.println("*************************************************");*/
                if (nb < quantité) {
-                   isValid = false;
-                   return isValid;
+                   return false;
                }
 
            }
        }
-        return isValid;
+        return true;
     }
 
 
@@ -73,10 +72,10 @@ public class UsineSimulation {
             double diff = intervalProduction - tempsRestantPourProduction;
             double div = diff / intervalProduction;
             double pourcentage = div * 100;
-            System.out.println(pourcentage);
+            //System.out.println(pourcentage);
             verifierPourcentage(pourcentage);
         }
-        else if (this.usine instanceof UsineProduction) {
+         if (this.usine instanceof UsineProduction) {
             UsineProduction usineProduction = (UsineProduction) this.usine;
             int intervalProduction = usineProduction.getIntervalProduction();
             double diff = intervalProduction - tempsRestantPourProduction;
@@ -85,9 +84,10 @@ public class UsineSimulation {
             verifierPourcentage(pourcentage);
         } else if (this.usine instanceof Entrepot) {
             Entrepot entrepot = (Entrepot) this.usine;
-            int capacite = entrepot.getCapacite();
-            int stock = this.stock.size();
-            double pourcentage = (stock / capacite) * 100;
+            double capacite = entrepot.getCapacite();
+            double stock = this.stock.size();
+             double div = stock / capacite;
+             double pourcentage = div * 100;
             verifierPourcentage(pourcentage);
         }
 

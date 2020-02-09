@@ -8,6 +8,7 @@ import reseau.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,11 @@ public class PanneauPrincipal extends JPanel {
 
     }
 
+
     void dessinerComposant(Graphics g) throws IOException {
+
+        List<Composant> composantToRemove = new ArrayList<>();
+
         Map<ComposantSortie, UsineSimulation> composantList = this.composantList;
 
         if (composantList != null) {
@@ -67,25 +72,49 @@ public class PanneauPrincipal extends JPanel {
 
                 if (composant.getPosition().getX() != arrive.getPosition().getX() || composant.getPosition().getY() != composant.getPosition().getY()) {
                     try {
+
+
                         g.drawImage(ImageIO.read(new File(composantIconPath)), positionComposant.x, positionComposant.y, this);
                         composant.getPosition().translate(composant.getVitesse().x, composant.getVitesse().y);
-
                         //ajouter le composant a la liste des composants entree de l'usine / entrepot
                         for (UsineSimulation usineSimulation : this.usineSimulationList) {
                             if (usineSimulation.getId() == arrive.getId()) {
-                                if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
-                                    usineSimulation.addToStock(new Composant(composant.getTypeComposant()));
-                                }
+//                                if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
+//                                    usineSimulation.addToStock(new Composant(composant.getTypeComposant()));
+//                                }
                             }
                         }
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    //ajouter le composant produit a la liste des composants de l'usine d'arrive
+                    if (composant.getDestination() != null) {
+                        if(composant.getDestination().getUsine() instanceof Entrepot){
+                            System.out.println("Taille Stock avant"+composant.getDestination().getStock().size());
+                        }
+                        //System.out.println("Before "+composant.getDestination().getStock().size());
+                        composant.getDestination().addToStock(new Composant(composant.getTypeComposant()));
+                        if(composant.getDestination().getUsine() instanceof Entrepot){
+                            System.out.println("Taille Stock après"+composant.getDestination().getStock().size());
+                            composant.getDestination().modifierIconeCourante();
+                        }
+                        //composantList.remove(composant);
+                        composantToRemove.add(composant);
+                        // System.out.println("After "+composant.getDestination().getStock().size());
+                    }
                 }
 
             });
+
+            for (Composant c : composantToRemove) {
+                composantList.remove(c);
+            }
+
         }
+
+
 
     }
 
