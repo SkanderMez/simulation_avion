@@ -30,6 +30,9 @@ public class VenteAvionPersonnalisee implements VenteAvion {
                     System.out.println("Vente Personnalisée : Le b d'avion au stock est 4 , on vend 2 avions");
                     showMessageDialog(null, "Vente Personnalisée : Le nombre d'avion au stock est 4 , on vend 2 avions, il reste "+usineSimulation.getStock().size()+ " avions");
 
+                    //Reprendre l'application après la vente si elle était bloquée
+                    Environnement.getInstance().paused = false;
+
                 }
                  else
                 {
@@ -40,9 +43,7 @@ public class VenteAvionPersonnalisee implements VenteAvion {
             }
         }
 
-        if (!Environnement.actif){
-            Environnement.actif = true;
-        }
+
 
     }
 }

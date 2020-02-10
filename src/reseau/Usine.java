@@ -11,6 +11,9 @@ public abstract class Usine {
     List<IconeUsine> iconesUsine = Arrays.asList(new IconeUsine[3]);
 
 
+    public Usine() {
+    }
+
     public Usine(List<IconeUsine> iconesUsine) {
         this.iconesUsine = iconesUsine;
     }

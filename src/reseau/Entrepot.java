@@ -1,18 +1,19 @@
 package reseau;
 
+import simulation.UsineSimulation;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Entrepot extends Usine {
 
-    private List<UsineProduction> observers;
+    private List<UsineProduction> observers ;
     private TypeComposant typeComposant;
     private int capacite;
 
 
-    public void notifierUsines(){
-        //Notify Method
-
-        if ()
+    public Entrepot() {
+        super();
     }
 
     public Entrepot(List<IconeUsine> iconesUsine, List<UsineProduction> observers, TypeComposant typeComposant, int capacite) {
@@ -21,6 +22,24 @@ public class Entrepot extends Usine {
         this.typeComposant = typeComposant;
         this.capacite = capacite;
     }
+
+    public void notifierUsines() {
+
+        for (int i=0;i<observers.size();i++){
+            if (observers.get(i) instanceof UsineProduction){
+                observers.get(i).update();
+            }
+        }
+
+    }
+
+    public void attach(UsineProduction observer){
+        if (observers == null){
+            observers = new ArrayList<>();
+        }
+        this.observers.add(observer);
+    }
+
 
     public List<UsineProduction> getObservers() {
         return observers;

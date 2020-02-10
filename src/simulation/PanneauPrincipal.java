@@ -50,7 +50,7 @@ public class PanneauPrincipal extends JPanel {
             for (UsineSimulation usineSimulation : usineSimulationList) {
                 String usineIconPath = usineSimulation.getIconeCourrante().getPath();
                 Point usinePosition = usineSimulation.getPosition();
-                g.drawImage(ImageIO.read(new File(usineIconPath)), usinePosition.x, usinePosition.y, this);
+                g.drawImage(ImageIO.read(new File(usineIconPath)), usinePosition.x-10, usinePosition.y-10, this);
             }
         } catch (IOException e) {
             e.printStackTrace();

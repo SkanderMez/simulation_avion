@@ -33,18 +33,22 @@ public class VenteAvionAleatoire implements VenteAvion {
                     usineSimulation.getStock().remove(usineSimulation.getStock().size()-1);
                 }
 
+
+
             }
+
+
         }
+
+        //Reprendre l'application après la vente si elle était bloquée
+        Environnement.getInstance().paused = false;
+
 
 
         System.out.println("Vente Aleatoire : Le nombre d'avion vendu est  : "+nombreAvionAVendre);
         showMessageDialog(null, "Vente Aleatoire : Le nombre d'avion vendu est  : "+nombreAvionAVendre);
 
-        //Reprendre l'application après la vente si elle était bloquée
-        if (!Environnement.actif){
-            Environnement.actif = true;
-            System.out.println("reprendre");
-        }
+
 
     }
 }

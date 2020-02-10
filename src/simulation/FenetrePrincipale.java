@@ -46,9 +46,11 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        Entrepot observable = null;
+
+
         if (evt.getPropertyName().equals("Tour")) {
             Map<UsineSimulation, List<Composant>> composantToDeleteFromUsineStock = new HashMap<>();
-
 
             for (UsineSimulation usineSimulation : usineSimulationList) {
 
@@ -144,9 +146,17 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 
                         //S'il L'entrepot est plein , on bloque l'application
                         Entrepot entrepot = (Entrepot) usineSimulation.getUsine();
-                        if (usineSimulation.getStock().size() == entrepot.getCapacite()) {
-                            Environnement.actif = false;
+                        if (usineSimulation.getStock().size()==entrepot.getCapacite()){
+                            observable=entrepot;
+                            observable.notifierUsines();
+
                         }
+
+
+
+//                        if (usineSimulation.getStock().size() == entrepot.getCapacite()) {
+//                            Environnement.actif = false;
+//                        }
                     }
                 }
 
@@ -161,9 +171,14 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
                 }
             });
 
+
+
             //Set usineSimulationList in the Graphic*/
             repaint();
         }
+
+
+
     }
 
     public Point getVitesse(UsineSimulation depart, UsineSimulation arrive) {

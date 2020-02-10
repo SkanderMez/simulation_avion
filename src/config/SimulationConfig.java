@@ -34,7 +34,27 @@ public class SimulationConfig extends Configuration {
             usineSimulationList = getUsinesSimulationInstances();
         }
 
+        //attach observers
+        Entrepot entrepot = (Entrepot) getEntrepotFromUsinesSimulationList().getUsine();
+        for (UsineSimulation usineSimulation:usineSimulationList){
+            if (usineSimulation.getUsine() instanceof UsineProduction){
+                entrepot.attach((UsineProduction)usineSimulation.getUsine());
+
+            }
+        }
+
         return usineSimulationList;
+    }
+
+    private static UsineSimulation getEntrepotFromUsinesSimulationList(){
+
+        for (UsineSimulation usineSimulation:usineSimulationList){
+            if (usineSimulation.getUsine() instanceof Entrepot){
+                return usineSimulation;
+            }
+        }
+
+        return null;
     }
 
     public static List<Chemin> getUniqueCheminsInstances(){
