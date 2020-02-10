@@ -11,6 +11,8 @@ public class Entrepot extends Usine {
 
     public void notifierUsines(){
         //Notify Method
+
+        if ()
     }
 
     public Entrepot(List<IconeUsine> iconesUsine, List<UsineProduction> observers, TypeComposant typeComposant, int capacite) {

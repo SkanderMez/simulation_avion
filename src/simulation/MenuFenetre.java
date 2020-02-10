@@ -74,6 +74,7 @@ public class MenuFenetre extends JMenuBar {
 
 		menuChoisir.addActionListener((ActionEvent e) -> {
 			// Ouvrir la fenêtre de sélection
+			System.out.println("iciiiiiiiiiiiiiiiiiiiiiiii");
 			// TODO - Récupérer la bonne stratégie de vente
 			new FenetreStrategie();
 		});

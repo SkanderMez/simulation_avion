@@ -1,8 +1,6 @@
 package simulation;
 
-import config.MetadonneeConfig;
 import config.SimulationConfig;
-import org.xml.sax.SAXException;
 import reseau.*;
 
 import java.awt.*;
@@ -15,7 +13,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
 
 public class PanneauPrincipal extends JPanel {
 
@@ -26,13 +23,12 @@ public class PanneauPrincipal extends JPanel {
     private Point vitesse = new Point(1, 1);
     private int taille = 32;
 
-    private List<UsineSimulation> usineSimulationList;
     private Map<ComposantSortie, UsineSimulation> composantList = new HashMap<>();
 
 
-    void dessinerChemins(Graphics g) throws IOException, SAXException, ParserConfigurationException {
-        SimulationConfig simulationConfig = new SimulationConfig(new MetadonneeConfig());
-        List<Chemin> cheminList = simulationConfig.getCheminInstances();
+    //Dessiner tous le chemins
+    private void dessinerChemins(Graphics g) {
+        List<Chemin> cheminList = SimulationConfig.getUniqueCheminsInstances();
 
         Graphics2D g2d = (Graphics2D) g;
         for (Chemin chemin : cheminList) {
@@ -46,61 +42,59 @@ public class PanneauPrincipal extends JPanel {
 
     }
 
-    void dessinerUsines(Graphics g) throws IOException, SAXException, ParserConfigurationException {
-        List<UsineSimulation> usineSimulationList = this.usineSimulationList;
+    //Dessiner toutes les usines
+    private void dessinerUsines(Graphics g) {
+        List<UsineSimulation> usineSimulationList = SimulationConfig.getUniqueUsinesSimulationInstances();
 
-        for (UsineSimulation usineSimulation : usineSimulationList) {
-            String usineIconPath = usineSimulation.getIconeCourrante().getPath();
-            Point usinePosition = usineSimulation.getPosition();
-            g.drawImage(ImageIO.read(new File(usineIconPath)), usinePosition.x, usinePosition.y, this);
-
+        try {
+            for (UsineSimulation usineSimulation : usineSimulationList) {
+                String usineIconPath = usineSimulation.getIconeCourrante().getPath();
+                Point usinePosition = usineSimulation.getPosition();
+                g.drawImage(ImageIO.read(new File(usineIconPath)), usinePosition.x, usinePosition.y, this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
 
-    void dessinerComposant(Graphics g) throws IOException {
+    private void dessinerComposant(Graphics g) {
 
         List<Composant> composantToRemove = new ArrayList<>();
 
         Map<ComposantSortie, UsineSimulation> composantList = this.composantList;
 
+        // s'il y a des composant produits à dessiner
         if (composantList != null) {
+            //On va dessiner chaque composant
             composantList.forEach((composant, arrive) -> {
                 String composantIconPath = composant.getTypeComposant().getIcone().getPath();
                 Point positionComposant = composant.getPosition();
 
+                //Si le composant n'est pas arrivé à l'usine destination, on le fait translater
                 if (composant.getPosition().getX() != arrive.getPosition().getX() || composant.getPosition().getY() != composant.getPosition().getY()) {
                     try {
-
-
                         g.drawImage(ImageIO.read(new File(composantIconPath)), positionComposant.x, positionComposant.y, this);
                         composant.getPosition().translate(composant.getVitesse().x, composant.getVitesse().y);
-                        //ajouter le composant a la liste des composants entree de l'usine / entrepot
-                        for (UsineSimulation usineSimulation : this.usineSimulationList) {
-                            if (usineSimulation.getId() == arrive.getId()) {
-//                                if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
-//                                    usineSimulation.addToStock(new Composant(composant.getTypeComposant()));
-//                                }
-                            }
-                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
+                }
+                //Si le composant est arrivé à l'usine destination , on va l'ajouter au stock de cette usine
+                else {
                     //ajouter le composant produit a la liste des composants de l'usine d'arrive
                     if (composant.getDestination() != null) {
-                        if(composant.getDestination().getUsine() instanceof Entrepot){
-                            System.out.println("Taille Stock avant"+composant.getDestination().getStock().size());
+                        if (composant.getDestination().getUsine() instanceof Entrepot) {
+//                            System.out.println("Taille Stock avant"+composant.getDestination().getStock().size());
                         }
-                        //System.out.println("Before "+composant.getDestination().getStock().size());
+
                         composant.getDestination().addToStock(new Composant(composant.getTypeComposant()));
-                        if(composant.getDestination().getUsine() instanceof Entrepot){
-                            System.out.println("Taille Stock après"+composant.getDestination().getStock().size());
+                        if (composant.getDestination().getUsine() instanceof Entrepot) {
                             composant.getDestination().modifierIconeCourante();
                         }
-                        //composantList.remove(composant);
+                        //On va ajouter ce composant à une liste composant  et puis on va supprimer ces composants du dessin
                         composantToRemove.add(composant);
                         // System.out.println("After "+composant.getDestination().getStock().size());
                     }
@@ -108,12 +102,12 @@ public class PanneauPrincipal extends JPanel {
 
             });
 
+            //Supprimer les composants arrivés à destination
             for (Composant c : composantToRemove) {
                 composantList.remove(c);
             }
 
         }
-
 
 
     }
@@ -123,27 +117,11 @@ public class PanneauPrincipal extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
-        try {
-            dessinerChemins(g);
-            dessinerUsines(g);
-            dessinerComposant(g);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
+        dessinerChemins(g);
+        dessinerUsines(g);
+        dessinerComposant(g);
     }
 
-    public List<UsineSimulation> getUsineSimulationList() {
-        return usineSimulationList;
-    }
-
-    public void setUsineSimulationList(List<UsineSimulation> usineSimulationList) {
-        this.usineSimulationList = usineSimulationList;
-    }
 
     public Map<ComposantSortie, UsineSimulation> getComposantList() {
         return composantList;

@@ -14,7 +14,7 @@ import java.util.List;
 public class MetadonneeConfig extends Configuration {
 
     //Cette methode retourne les instances icones usine pour une usine spécifiée en paramètre
-    public List<IconeUsine> getIconesUsineInstances(Node usine) throws ParserConfigurationException, SAXException, IOException {
+    public static List<IconeUsine> getIconesUsineInstances(Node usine) throws ParserConfigurationException, SAXException, IOException {
 
         List<IconeUsine> iconeObjectsList = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class MetadonneeConfig extends Configuration {
     }
 
     //Cette methode retourne les instances entree usine pour une usine spécifiée en paramètre
-    public List<QuantiteDTO> getComposantsEntreeUsineInstances(Node usine) {
+    public static List<QuantiteDTO> getComposantsEntreeUsineInstances(Node usine) {
 
         List<QuantiteDTO>  composantsEntreeObjectsList = new ArrayList<>();
 
@@ -77,7 +77,7 @@ public class MetadonneeConfig extends Configuration {
     }
 
     //Cette methode retourne l' instances sortie usine pour une usine spécifiée en paramètre
-    public TypeComposant getComposantSortieUsineInstances(Node usine) {
+    public static TypeComposant getComposantSortieUsineInstances(Node usine) {
         TypeComposant typeComposantSortieObject = new TypeComposant();
 
         if (usine.getNodeType() == Node.ELEMENT_NODE) {
@@ -94,7 +94,7 @@ public class MetadonneeConfig extends Configuration {
     }
 
     //Cette methode retourne la valeur de l'intervalde production d'une usine donnée
-    public int getUsinesIntervalProductionValue(Node usine) {
+    public static int getUsinesIntervalProductionValue(Node usine) {
 
         int intervalProductionValue = 0;
 
@@ -112,7 +112,7 @@ public class MetadonneeConfig extends Configuration {
     }
 
 
-    public List<Usine> getUsineInstances() throws ParserConfigurationException, SAXException, IOException {
+    public static List<Usine> getUsineInstances() throws ParserConfigurationException, SAXException, IOException {
 
         List<Usine> usineObjectsList = new ArrayList<>();
 

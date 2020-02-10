@@ -1,8 +1,15 @@
 package simulation;
 
+import config.SimulationConfig;
+import reseau.Entrepot;
+import vente.VenteAvion;
+import vente.VenteAvionAleatoire;
+import vente.VenteAvionPersonnalisee;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -18,13 +25,28 @@ public class PanneauStrategie extends JPanel {
 	public PanneauStrategie() {
 
 		ButtonGroup groupeBoutons = new ButtonGroup();
+		//Vente Aleatoire
 		JRadioButton strategie1 = new JRadioButton("Stratégie 1");
-		JRadioButton strategie2 = new JRadioButton("Stratégie 2");	
+
+		//Vente Personnalisée
+		JRadioButton strategie2 = new JRadioButton("Stratégie 2");
 		
 		JButton boutonConfirmer = new JButton("Confirmer");
 
 		boutonConfirmer.addActionListener((ActionEvent e) -> {
-			// TODO - Appeler la bonne stratégie
+			// TODO - Appeler la  stratégie
+
+			//Vente Aleatoire
+			if (getSelectedButtonText(groupeBoutons).equals("Stratégie 1")){
+				VenteAvion venteAvion = new VenteAvionAleatoire();
+				vendreAvion(venteAvion);
+
+			} else
+				//Vente Personnalisée
+				if (getSelectedButtonText(groupeBoutons).equals("Stratégie 2")){
+				VenteAvion venteAvion = new VenteAvionPersonnalisee();
+				vendreAvion(venteAvion);
+			}
 			System.out.println(getSelectedButtonText(groupeBoutons));
 			// Fermer la fenêtre du composant
 			SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
@@ -44,6 +66,11 @@ public class PanneauStrategie extends JPanel {
 		add(boutonConfirmer);
 		add(boutonAnnuler);
 
+	}
+
+
+	public void vendreAvion(VenteAvion venteAvion){
+		venteAvion.vendreAvion();
 	}
 
 	/**

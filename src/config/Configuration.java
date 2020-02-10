@@ -16,7 +16,7 @@ public abstract class Configuration {
 
     protected static final String filePath = "src/ressources/configuration.xml";
 
-    public Document readXmlFile() throws ParserConfigurationException, IOException, SAXException {
+    public static Document readXmlFile() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(new File(filePath));
@@ -25,17 +25,17 @@ public abstract class Configuration {
         return doc;
     }
 
-    public NodeList getSpecificNodeListFromElement(Element eElement, String nodeName){
+    public static NodeList getSpecificNodeListFromElement(Element eElement, String nodeName){
         return  eElement.getElementsByTagName(nodeName);
     }
 
-    public  boolean nodeExistsInElement(Element element, String nodeName){
+    public static boolean nodeExistsInElement(Element element, String nodeName){
         NodeList nodeList = getSpecificNodeListFromElement(element,nodeName);
         return nodeList.getLength()!=0;
     }
 
     //A mettre dans la classe Configuration (utilisé aussi dans simulation)
-    public NodeList getAllNodeFromSpecificNodeName(String balise, String node) throws IOException, SAXException, ParserConfigurationException {
+    public  static NodeList getAllNodeFromSpecificNodeName(String balise, String node) throws IOException, SAXException, ParserConfigurationException {
 
         Document doc = readXmlFile();
 

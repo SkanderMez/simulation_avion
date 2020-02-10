@@ -1,8 +1,6 @@
 package simulation;
 
-import config.MetadonneeConfig;
 import config.SimulationConfig;
-import org.xml.sax.SAXException;
 import reseau.Entrepot;
 import reseau.TypeComposant;
 import reseau.UsineAvecEntree;
@@ -11,23 +9,22 @@ import reseau.UsineProduction;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.xml.parsers.ParserConfigurationException;
 
 public class FenetrePrincipale extends JFrame implements PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
     private static final String TITRE_FENETRE = "Laboratoire 1 : LOG121 - Simulation";
     private static final Dimension DIMENSION = new Dimension(700, 700);
-    private List<UsineSimulation> usineSimulationList;
 
     private PanneauPrincipal panneauPrincipal;
+
+    private List<UsineSimulation> usineSimulationList = SimulationConfig.getUniqueUsinesSimulationInstances();
 
     public FenetrePrincipale() {
         //PanneauPrincipal panneauPrincipal = new PanneauPrincipal();
@@ -50,34 +47,39 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("Tour")) {
-            Map<UsineSimulation,List<Composant>> composantToDeleteFromUsineStock = new HashMap<>();
+            Map<UsineSimulation, List<Composant>> composantToDeleteFromUsineStock = new HashMap<>();
 
 
             for (UsineSimulation usineSimulation : usineSimulationList) {
+
+                //Si l'usine est une usine avec entrée
                 if (usineSimulation.getUsine() instanceof UsineAvecEntree) {
 
-                List<Composant> composantToRemove = new ArrayList<>();
+                    List<Composant> composantToRemove = new ArrayList<>();
 
                     UsineAvecEntree usineAvecEntree = (UsineAvecEntree) usineSimulation.getUsine();
-                   // System.out.println("Usine entrée "+usineSimulation.getId()+"Valide stock"+usineSimulation.getStock().size());
+                    //Si elle a les composants nécessaires pour la production
                     if (usineSimulation.veriferValiditeStock()) {
-                     /*       System.out.println("------------------------------");
-                        System.out.println("stock verifie  " + usineSimulation.getId());
-                        System.out.println("------------------------------");
-*/
-                        //Gestion des icones
+
+                        //On va décrementer le temps restant à la production (qui est initialisé à l'interval de production) à chaque tours
                         usineSimulation.decrementerTempsRestantPourProduction();
+
+                        //On modifier l'icone de l'usine par rapport au temps restant
                         usineSimulation.modifierIconeCourante();
+
+                        //Si le temps restant est fini , l'usine peut produire son composant
                         if (usineSimulation.getTempsRestantPourProduction() == 0) {
+                            //On instancie un composant selon l'usine qui l'a produit
                             ComposantSortie composantSortie = new ComposantSortie();
                             composantSortie.setTypeComposant(usineAvecEntree.getTypeComposantSortie());
                             composantSortie.setPosition(new Point(usineSimulation.getPosition()));
                             composantSortie.setDepart(usineSimulation);
-                            UsineSimulation arrive = getUsineArriveFromUsineDepart(usineSimulation, usineSimulationList);
+                            UsineSimulation arrive = getUsineArriveFromUsineDepart(usineSimulation);
                             composantSortie.setDestination(arrive);
                             //Set Vitesse
                             composantSortie.setVitesse(getVitesse(usineSimulation, arrive));
 
+                            // Si le stock de l'usine est positif après sa production , on va supprimer les composants utilisés à cette production du stock
                             if (usineSimulation.getStock().size() > 0) {
 
                                 UsineAvecEntree usine3 = (UsineAvecEntree) usineSimulation.getUsine();
@@ -88,7 +90,7 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
                                     while (compteur < quantité) {
                                         for (Composant composant3 : usineSimulation.getStock()) {
                                             if (composant3.getTypeComposant().getType().equals(typecomposant.getType())) {
-                                               //usineSimulation.getStock().remove(composant3);
+                                                //usineSimulation.getStock().remove(composant3);
                                                 composantToRemove.add(composant3);
                                                 compteur++;
 
@@ -99,26 +101,34 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 
                                 }
 
-                                composantToDeleteFromUsineStock.put(usineSimulation,composantToRemove);
+                                composantToDeleteFromUsineStock.put(usineSimulation, composantToRemove);
 
 
                             }
+
+
                             panneauPrincipal.getComposantList().put(composantSortie, arrive);
 
                         }
                     }
-                }else
-                {
+                } else {
+
+                    //Si l'usine est une usine de production ( sans entrées )
                     if (usineSimulation.getUsine() instanceof UsineProduction) {
-                        //Gestion des icones
+
+                        //decrémenter le temps restant pour production
                         usineSimulation.decrementerTempsRestantPourProduction();
+
+                        //Gestion des icones par rapport au temps restant
                         usineSimulation.modifierIconeCourante();
+
+                        //si le temps est achevé , on génère le composant
                         if (usineSimulation.getTempsRestantPourProduction() == 0) {
                             ComposantSortie composantSortie = new ComposantSortie();
                             UsineProduction usineProduction = (UsineProduction) usineSimulation.getUsine();
                             composantSortie.setTypeComposant(usineProduction.getTypeComposantSortie());
                             composantSortie.setPosition(new Point(usineSimulation.getPosition()));
-                            UsineSimulation arrive = getUsineArriveFromUsineDepart(usineSimulation, usineSimulationList);
+                            UsineSimulation arrive = getUsineArriveFromUsineDepart(usineSimulation);
                             composantSortie.setDestination(arrive);
                             composantSortie.setDepart(usineSimulation);
                             //Set Vitesse
@@ -126,12 +136,16 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
                             panneauPrincipal.getComposantList().put(composantSortie, arrive);
 
                         }
-                    }
-                    else if(usineSimulation.getUsine() instanceof Entrepot){
+                    } else
+                        // s'il s'agit d'un entreport
+                        if (usineSimulation.getUsine() instanceof Entrepot) {
+                            //On modifier son icone selon la CAPACITE
                         usineSimulation.modifierIconeCourante();
+
+                        //S'il L'entrepot est plein , on bloque l'application
                         Entrepot entrepot = (Entrepot) usineSimulation.getUsine();
-                        if (usineSimulation.getStock().size() == entrepot.getCapacite()){
-                            Environnement.actif=false;
+                        if (usineSimulation.getStock().size() == entrepot.getCapacite()) {
+                            Environnement.actif = false;
                         }
                     }
                 }
@@ -140,15 +154,14 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
             }
 
 
-            composantToDeleteFromUsineStock.forEach((usine,composantList)->{
-                for (Composant c : composantList){
+            composantToDeleteFromUsineStock.forEach((usine, composantList) -> {
+                for (Composant c : composantList) {
                     usine.getStock().remove(c);
                     usine.setIconeCourrante(usine.getUsine().getIconesUsine().get(0));
                 }
             });
 
             //Set usineSimulationList in the Graphic*/
-            //panneauPrincipal.setUsineSimulationList(usineSimulationList);
             repaint();
         }
     }
@@ -189,48 +202,24 @@ public class FenetrePrincipale extends JFrame implements PropertyChangeListener 
 
     }
 
-    public UsineSimulation getUsineArriveFromUsineDepart(UsineSimulation depart, List<UsineSimulation> usineSimulationList) {
-        try {
+    public UsineSimulation getUsineArriveFromUsineDepart(UsineSimulation depart) {
 
-            SimulationConfig simulationConfig = new SimulationConfig(new MetadonneeConfig());
-            List<Chemin> cheminList = simulationConfig.getCheminInstances();
+        List<Chemin> cheminList = SimulationConfig.getUniqueCheminsInstances();
 
-            for (Chemin chemin : cheminList) {
-                if (chemin.getDepart().getId() == depart.getId()) {
-                    //System.out.println("returned " + chemin.getArrivee());
-                    UsineSimulation arrive = chemin.getArrivee();
-                    for (UsineSimulation usineSimulation : usineSimulationList) {
-                        if (usineSimulation.getId() == arrive.getId()) {
-                            return usineSimulation;
-                        }
+        for (Chemin chemin : cheminList) {
+            if (chemin.getDepart().getId() == depart.getId()) {
+                //System.out.println("returned " + chemin.getArrivee());
+                UsineSimulation arrive = chemin.getArrivee();
+                for (UsineSimulation usineSimulation : this.usineSimulationList) {
+                    if (usineSimulation.getId() == arrive.getId()) {
+                        return usineSimulation;
                     }
                 }
             }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
         return null;
 
-    }
-
-    public List<UsineSimulation> getUsineSimulationList() {
-        return usineSimulationList;
-    }
-
-    public void setUsineSimulationList(List<UsineSimulation> usineSimulationList) {
-        this.usineSimulationList = usineSimulationList;
-    }
-
-    public PanneauPrincipal getPanneauPrincipal() {
-        return panneauPrincipal;
-    }
-
-    public void setPanneauPrincipal(PanneauPrincipal panneauPrincipal) {
-        this.panneauPrincipal = panneauPrincipal;
     }
 
 }
